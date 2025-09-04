@@ -1,0 +1,362 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  
+  <style>
+    /* color palete */
+    :root {
+      --desktop-bg:   #C0C0C0;                 /* Aqua desktop gray */
+      --win-bg:       #F2F2F2;                 /* window content */
+      --bar-top:      #EEEEEE;                 /* toolbar gradient top */
+      --bar-bot:      #C6C6C6;                 /* toolbar gradient bottom */
+      --border:       #888888;                 /* window border */
+      --font:         "Lucida Grande", sans-serif;
+      --text:         #333333;
+      --accent:       #0050C8;                 /* link/heading accent */
+      --gap:          8px;
+    }
+
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+
+    body {
+      background: var(--desktop-bg);
+      font-family: var(--font);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    
+    .window {
+      width: 820px;
+      background: var(--win-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    
+    .title-bar {
+      height: 30px;
+      background: linear-gradient(to bottom, var(--bar-top), var(--bar-bot));
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      user-select: none;
+    }
+    .traffic {
+      display: flex;
+      gap: 4px;
+    }
+    .traffic div {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+    }
+    .close { background: radial-gradient(circle at 30% 30%, #FF5F57, #C33); }
+    .min   { background: radial-gradient(circle at 30% 30%, #FFBD2E, #C38); }
+    .max   { background: radial-gradient(circle at 30% 30%, #28C840, #0A8); }
+    .title {
+      flex: 1;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    
+    .content {
+      display: flex;
+      min-height: 500px;
+    }
+
+    /* sidebar */
+    .sidebar {
+      width: 200px;
+      background: var(--win-bg);
+      border-right: 1px solid var(--border);
+      padding: var(--gap);
+      font-size: 12px;
+    }
+    .sidebar h3 {
+      font-size: 12px;
+      margin-bottom: var(--gap);
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .sidebar ul { list-style: none; }
+    .sidebar a {
+      display: block;
+      padding: 2px 4px;
+      margin-bottom: 4px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 2px;
+    }
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: var(--desktop-bg);
+    }
+
+    
+    .main {
+      flex-grow: 1;
+      padding: var(--gap);
+      overflow-y: auto;
+      font-size: 12px;
+    }
+    .intro h1 {
+      font-size: 16px;
+      margin-bottom: var(--gap);
+      color: var(--accent);
+    }
+    .intro p { margin-bottom: 12px; }
+    h2 {
+      font-size: 14px;
+      margin-top: 16px;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+
+    
+    details {
+      margin-bottom: 12px;
+      background: var(--win-bg);
+      border: 1px solid var(--border);
+      padding: 4px;
+      border-radius: 3px;
+    }
+    summary {
+      cursor: pointer;
+      display: inline-block;
+      padding: 2px 4px;
+      font-weight: bold;
+    }
+    summary:hover {
+      background: var(--desktop-bg);
+    }
+
+    /* terminal */
+    .bash-block {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: var(--gap);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      margin-top: var(--gap);
+      white-space: pre;
+      font-size: 12px;
+    }
+
+    code {
+  background-color: #f0f0f0;
+  color: #c7254e;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+    
+    @media (max-width: 600px) {
+      .window { width: 100%; }
+      .content { flex-direction: column; }
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="title-bar">
+      <div class="traffic">
+        <div class="close"></div>
+        <div class="min"></div>
+        <div class="max"></div>
+      </div>
+      <div class="title">CS240 - Programming in C</div>
+    </div>
+
+    <div class="content">
+      <nav class="sidebar">
+        <h3>CS240</h3>
+        <ul>
+          <li><a href="#navigate">Navigate Filesystem</a></li>
+          <li><a href="#create">Create/Delete Files</a></li>
+          <li><a href="#compile">Compiling C</a></li>
+          <li><a href="#ssh">SSH &amp; Submit</a></li>
+        </ul>
+      </nav>
+
+      <main class="main">
+        <section class="intro">
+          <h1>Unix Pocket Guide</h1>
+          <p>This guide supplements your official class materials, including PDFs, slides, and the textbook.</p>
+          <p><em>Note:</em> This guide only covers the basics. There are many more Unix commands out there, and you're encouraged to keep learning as you go.</p>
+        </section>
+        
+        
+        <h2 id="navigate">Commands To Navigate The Filesystem</h2>
+        <details>
+      <summary>How do I get the path to where I currently am in the directory? (<code>pwd</code>)</summary>
+      <p><code>pwd</code> prints the path of your current/working directory.</p>
+      <div class="bash-block">
+$ pwd
+/home/user/workspace-cs240
+      </div>
+    </details>
+
+    <details>
+      <summary>How do I change directories? (<code>cd</code>)</summary>
+      <p><code>cd</code> command lets you move into another folder.</p>
+      <div class="bash-block">
+$ cd Documents
+      </div>
+      
+      <p>Another example: </p>
+      <div class="bash-block">
+$ cd workspace-cs240/Hw1
+      </div>
+
+      <p>To move back one directory: </p>
+      <div class="bash-block">
+$ cd ..
+      </div>
+    </details>
+
+    <details>
+      <summary>How do I list the contents of a directory? (<code>ls</code>)</summary>
+      <p><code>ls</code> lists directory contents </p>
+      <div class="bash-block">
+$ ls
+Q1.c&nbsp;&nbsp;Q2.c&nbsp;&nbsp;Q3.c&nbsp;&nbsp;makefile&nbsp;&nbsp;readme  
+$
+      </div>
+    </details>
+
+    <h2 id="create">Commands To Create and Delete Files and Directories</h2>
+
+     <details>
+      <summary>How do I create a new directory? (<code>mkdir</code>)</summary>
+      <p>Type <code>mkdir</code> followed by the desired directory name.</p>
+      <p> For example, to create a directory to store all of your CS240 homework assignments: </p>
+      <div class="bash-block">
+$ cd $HOME 
+$ mkdir workspace-cs240 
+$ cd workspace-cs240 
+$ mkdir Hw1 
+      </div>
+    </details>
+    
+    <details>
+      <summary>How do I create a new file? (<code>touch</code>)</summary>
+      <p> Use <code>touch</code> followed by a filename to create an empty file.</p>
+      <div class="bash-block">
+$ touch Q1.c
+      </div>
+    </details>
+
+    <details>
+      <summary>How do I delete files and directories (<code>rm</code> &amp; <code>rmdir</code>)</summary>
+      <p> To delete a directory that is empty:</p>
+      <div class="bash-block">
+$ rmdir Hw0
+      </div>
+      <p> To permanently delete a file:</p>
+      <div class="bash-block">
+$ rm hello.c
+      </div>
+    </details>
+
+
+    <h2 id="compile">Compiling your C pset</h2>
+
+    <details>
+      <summary>How do I compile my C program? (<code>make</code>)</summary>
+      <p>Open your terminal and navigate to your homework directory (e.g., home/user/workspace-cs240/Hw1). Then type <code>make</code> to compile the code based on the instructions in your makefile. This will generate the executable files. </p>
+      <div class="bash-block">
+$ ls 
+makefile readme Q1.c Q2.c Q3.c 
+$ make 
+$ ls 
+makefile readme Q1 Q1.c Q2 Q2.c Q3 Q3.c 
+      </div>
+
+      Now, run the executable:
+      <div class="bash-block">
+$ ./Q1 
+      </div>
+
+      To remove the executables:
+      <div class="bash-block">
+$ make clean 
+$ ls 
+$ makefile readme Q1.c Q2.c Q3.c
+      </div>
+    </details>
+
+
+
+    <h2 id="ssh">Submitting Homework to the UMB CS Server</h2>
+
+    <details>
+      <summary>How do I copy my files to the CS server? <code>(scp)</code></summary>
+      <p>Open your terminal and navigate to the directory where your homework is saved. (e.g., /home/users/workspace-cs240/Hw1)</p> 
+      <p> To copy a file to the UMB CS server:</p>
+      <div class="bash-block">
+$ scp Q1.c username@users.cs.umb.edu:/home/username/cs240/Hw1
+      </div>
+    
+        <p>Another example:</p>
+        <div class="bash-block">
+$ scp makefile username@users.cs.umb.edu:/home/username/cs240/Hw1
+      </div>
+
+      <p><code>username</code> should be replaced with your actual UMass Boston CS account username.</p>
+      <p>After copying your files, log in to the CS server via SSH to confirm they were copied successfully.</p>
+      <br>
+      <p><strong>Note:</strong> Submissions must include both a <code>makefile</code> and a <code>readme</code> to receive full credit.</p>
+
+      <p><strong>Reminder:</strong> Be sure to review the official <em>UMB_Unix_Server_Tutorial (PDF)</em> provided by your instructor for full instructions.</p>
+     
+    </details>
+
+    <details>
+      <summary>How do I log in to the CS server via SSH?</summary>
+      <p>Use the following command in your terminal:</p>
+      <div class="bash-block">
+$ ssh username@users.cs.umb.edu
+  </div>
+  <p><code>username</code> should be replaced with your actual UMass Boston CS account username.</p>
+  
+</details>
+
+    <details>
+      <summary>How do I set permissions on my submitted files?</summary>
+      <p>From your homework directory on the CS server, run the following commands for each file you submitted:</p>
+      <div class="bash-block">
+username@pe15$ chmod o-r Q1.c
+      </div>
+      <div class="bash-block">
+username@pe15$ chmod g+r Q1.c
+      </div>
+      <p>Repeat this for all submitted files, including your <code>makefile</code> and <code>readme</code></p>
+    </details>
+      </main>
+    </div>
+    <footer style="text-align:center; font-size:11px; padding:12px; background: var(--win-bg); border-top: 1px solid var(--border);">
+  This guide was created to support CS240 students at UMass Boston.<br>
+  For official policies and submission instructions, refer to the materials provided by your instructor.
+</footer>
+
+  </div>
+</body>
+</html>
